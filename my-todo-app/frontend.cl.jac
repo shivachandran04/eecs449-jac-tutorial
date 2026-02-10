@@ -136,9 +136,9 @@ def:pub app -> any {
                             </div>
                             <div className="task-summary">
                                 <div className="remaining-count">
-                                    {incompleteTodos.length} {(
-                                        "item " if incompleteTodos.length == 1 else "items "
-                                    )} remaining
+                                    {incompleteTodos.length + " " + (
+                                        "item" if incompleteTodos.length == 1 else "items"
+                                    ) + " remaining"}
                                 </div>
                                 {(
                                     <div className="time-estimate-total">
@@ -146,7 +146,7 @@ def:pub app -> any {
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <polyline points="12 6 12 12 16 14"></polyline>
                                         </svg>
-                                        {formatTimeEstimate(totalTime)}  estimated
+                                        {formatTimeEstimate(totalTime) + " estimated"}
                                     </div>
                                 ) if totalTime > 0 else None}
                             </div>

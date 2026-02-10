@@ -150,7 +150,7 @@ impl app.formatTimeEstimate(minutes: int) -> str {
     if minutes < 60 {
         return minutes + " min";
     }
-    hours = minutes / 60;
+    hours = Math.floor(minutes / 60);
     remainingMins = minutes % 60;
     if remainingMins == 0 {
         return hours + " hr";

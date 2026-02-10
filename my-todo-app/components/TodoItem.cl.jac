@@ -5,7 +5,7 @@ def:pub TodoItem(todo: dict, onToggle: any, onDelete: any) -> any {
         if minutes < 60 {
             return minutes + "m";
         }
-        hours = minutes / 60;
+        hours = Math.floor(minutes / 60);
         remainingMins = minutes % 60;
         if remainingMins == 0 {
             return hours + "h";
