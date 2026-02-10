@@ -15,7 +15,8 @@ impl app.addTodo -> None {
         "id": newTodo.id,
         "title": newTodo.title,
         "completed": newTodo.completed,
-        "category": newTodo.category
+        "category": newTodo.category,
+        "time_estimate": newTodo.time_estimate
     }]);
     newTodoText = "";
 }
@@ -27,7 +28,8 @@ impl app.toggleTodo(todoId: str) -> None {
             if t.id == todoId {
                 return {
                     "id": t.id, "title": t.title,
-                    "completed": not t.completed, "category": t.category
+                    "completed": not t.completed, "category": t.category,
+                    "time_estimate": t.time_estimate
                 };
             }
             return t;
@@ -132,4 +134,26 @@ impl app.getIngredientsTotal -> float {
         total = total + ing.cost;
     }
     return total;
+}
+
+impl app.getTotalEstimatedTime -> int {
+    total = 0;
+    for todo in todos {
+        if not todo.completed {
+            total = total + todo.time_estimate;
+        }
+    }
+    return total;
+}
+
+impl app.formatTimeEstimate(minutes: int) -> str {
+    if minutes < 60 {
+        return minutes + " min";
+    }
+    hours = minutes / 60;
+    remainingMins = minutes % 60;
+    if remainingMins == 0 {
+        return hours + " hr";
+    }
+    return hours + " hr " + remainingMins + " min";
 }

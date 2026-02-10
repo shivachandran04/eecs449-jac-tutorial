@@ -55,6 +55,8 @@ def:pub app -> any {
     async def clearIngredients -> None;
     def handleMealKeyPress(e: any) -> None;
     def getIngredientsTotal -> float;
+    def getTotalEstimatedTime -> int;
+    def formatTimeEstimate(minutes: int) -> str;
 
     if checkingAuth {
         return
@@ -67,6 +69,11 @@ def:pub app -> any {
 
     if isLoggedIn {
         totalCost = getIngredientsTotal();
+        totalTime = getTotalEstimatedTime();
+        incompleteTodos = todos.filter(
+            lambda t: any -> bool { return not t.completed; }
+        );
+        
         return
             <div className="app-container">
                 <div className="app-content">
@@ -127,10 +134,21 @@ def:pub app -> any {
                                     </div>
                                 )}
                             </div>
-                            <div className="remaining-count">
-                                {todos.filter(
-                                    lambda t: any -> bool { return not t.completed; }
-                                ).length} items remaining
+                            <div className="task-summary">
+                                <div className="remaining-count">
+                                    {incompleteTodos.length} {(
+                                        "item " if incompleteTodos.length == 1 else "items "
+                                    )} remaining
+                                </div>
+                                {(
+                                    <div className="time-estimate-total">
+                                        <svg className="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        {formatTimeEstimate(totalTime)}  estimated
+                                    </div>
+                                ) if totalTime > 0 else None}
                             </div>
                         </div>
                         <div className="column-right">
