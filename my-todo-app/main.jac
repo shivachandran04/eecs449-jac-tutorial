@@ -37,13 +37,17 @@ def categorize(title: str) -> Category by llm();
 """Generate a shopping list of ingredients needed for a described meal."""
 def generate_ingredients(meal_description: str) -> list[Ingredient] by llm();
 
+"""Estimate how long a task will take in minutes. Return a reasonable estimate between 5 and 480 minutes (8 hours)."""
+def estimate_duration(task_title: str) -> int by llm();
+
 # --- Data Nodes ---
 
 node Todo {
     has id: str,
         title: str,
         completed: bool = False,
-        category: str = "other";
+        category: str = "other",
+        time_estimate: int = 30;
 }
 
 node MealIngredient {
@@ -61,16 +65,28 @@ walker:priv AddTodo {
 
     can create with Root entry {
         category = str(categorize(self.title)).split(".")[-1].lower();
+        time_est = estimate_duration(self.title);
+
+        # Keep time estimate within reasonable bounds
+        if time_est < 5 {
+            time_est = 5;
+        }
+        if time_est > 480 {
+            time_est = 480;
+        }
+
         new_todo = here ++> Todo(
             id=str(uuid4()),
             title=self.title,
-            category=category
+            category=category,
+            time_estimate=time_est
         );
         report {
             "id": new_todo[0].id,
             "title": new_todo[0].title,
             "completed": new_todo[0].completed,
-            "category": new_todo[0].category
+            "category": new_todo[0].category,
+            "time_estimate": new_todo[0].time_estimate
         };
     }
 }
@@ -87,7 +103,8 @@ walker:priv ListTodos {
             "id": here.id,
             "title": here.title,
             "completed": here.completed,
-            "category": here.category
+            "category": here.category,
+            "time_estimate": here.time_estimate
         });
     }
 
